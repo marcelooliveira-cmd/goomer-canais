@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Comercial · Goomer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{--azul:#2b00ff;--eletrico:#1d84ff;--ambar:#ff9700;--tinta:#0e1230;--cinza:#5b6076;--linha:#e7e9f2;--fundo:#f4f5fb;--card:#fff;--ok:#12b76a;--ruim:#e5484d;--lil:#8aa0d8}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:var(--fundo);color:var(--tinta);line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  .num{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.5px;line-height:.9}
+  header{background:linear-gradient(120deg,var(--azul),var(--eletrico));color:#fff;padding:32px 0 0;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-80px;top:-90px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,151,0,.35),transparent 70%)}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;opacity:.85}
+  header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5.5vw,56px);letter-spacing:1px;margin:6px 0 2px;line-height:.95}
+  .subhead{font-size:14px;opacity:.9;font-weight:500;margin-bottom:18px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{background:rgba(255,255,255,.14);color:#fff;border:none;font-family:inherit;font-size:14px;font-weight:700;padding:12px 20px;border-radius:12px 12px 0 0;cursor:pointer;transition:.15s;opacity:.8}
+  .tab:hover{opacity:1}.tab.on{background:var(--fundo);color:var(--azul);opacity:1}
+  .tab small{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+  .panel{display:none}.panel.on{display:block}
+  section{margin-top:26px}
+  .sec-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cinza);margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .sec-title::before{content:"";width:22px;height:3px;background:var(--azul);border-radius:2px}
+  .sec-note{font-weight:600;text-transform:none;letter-spacing:0;color:var(--cinza)}
+  .funil{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:22px 10px;box-shadow:0 8px 30px rgba(43,0,255,.06)}
+  .fstep{padding:6px 20px;text-align:center}.fstep .k{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cinza)}
+  .fstep .v{font-size:clamp(34px,4.6vw,54px);color:var(--azul);margin-top:4px}.fstep.money .v{color:var(--eletrico)}.fstep .sub{font-size:12px;color:var(--cinza);margin-top:2px;font-weight:500}
+  .conv{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px}.conv .arrow{font-size:20px;color:var(--linha)}
+  .conv .pct{font-size:12px;font-weight:800;color:#a15c00;background:#fff5e6;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .metabox{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:24px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 8px 30px rgba(43,0,255,.06)}
+  .mb-pct{font-size:clamp(56px,9vw,88px);color:var(--azul);line-height:.82}.mb-lab{font-size:13px;color:var(--cinza);font-weight:600;max-width:160px;margin-top:6px}
+  .mb-bar{position:relative;height:16px;background:var(--linha);border-radius:8px;overflow:hidden}.mb-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--azul),var(--eletrico));border-radius:8px}
+  .mb-nums{margin-top:12px;font-size:15px;color:var(--cinza);font-weight:600}.mb-nums b{color:var(--tinta)}.mb-nums .gap{color:var(--ruim)}.mb-nums .ok{color:var(--ok)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:16px 18px}.kpi .k{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza)}
+  .kpi .v{font-size:34px;color:var(--tinta);margin-top:4px}.kpi .note{font-size:12px;color:var(--cinza);margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:6px 4px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--cinza);text-align:right;padding:14px 14px 12px;border-bottom:2px solid var(--linha);cursor:pointer;user-select:none;white-space:nowrap}
+  thead th:first-child,thead th:nth-child(2){text-align:left}thead th:hover,thead th.active{color:var(--azul)}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--linha);text-align:right;vertical-align:middle}tbody td:first-child,tbody td:nth-child(2){text-align:left}
+  tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:#fafbff}
+  .pos{font-family:'Bebas Neue';font-size:22px;color:var(--azul);width:34px}.nome{font-weight:700}.val-money{font-weight:800;color:var(--eletrico)}
+  .barwrap{display:flex;align-items:center;gap:8px;justify-content:flex-end}.bar{width:70px;height:8px;background:var(--linha);border-radius:6px;overflow:hidden;flex-shrink:0}
+  .bar i{display:block;height:100%;background:var(--eletrico);border-radius:6px}.bar i.over{background:var(--ambar)}
+  .pctlab{font-weight:800;min-width:40px;display:inline-block}.pctlab.over{color:var(--ambar)}.pctlab.mid{color:var(--eletrico)}.pctlab.low{color:var(--ruim)}.pctlab.fer{color:var(--cinza)}
+  tfoot td{padding:13px 14px;font-weight:800;border-top:2px solid var(--linha);text-align:right;background:#fbfbfe}tfoot td:first-child,tfoot td:nth-child(2){text-align:left}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .chartbox{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:18px 18px 12px}.chartbox h3{font-size:13px;font-weight:800;margin-bottom:2px}.chartbox p{font-size:12px;color:var(--cinza);margin-bottom:12px}
+  .cvs{position:relative;height:250px}
+  .mini td,.mini th{font-size:13px;padding:9px 11px}.mini thead th{text-align:center}.mini thead th:first-child{text-align:left}
+  .mini tbody td{text-align:center}.mini tbody td:first-child{text-align:left;font-weight:700}.mini tfoot td{text-align:center}.mini tfoot td:first-child{text-align:left}
+  .wk b{font-weight:800;font-size:14px}.wk span{color:#b8bccb;font-weight:600;font-size:11px}.wk.hit b{color:var(--ok)}.wk.miss b{color:var(--ruim)}.wk.fer b{color:#c9cee0}.wk.atual{background:#eaf2ff}
+  .hl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .hlc{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:16px 18px}
+  .hlc .t{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ambar)}
+  .hlc .big{font-size:22px;font-weight:800;margin-top:6px;line-height:1.1}.hlc .s{font-size:12px;color:var(--cinza);margin-top:3px}
+  .weekbig{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .wb{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:14px}.wb .wkn{font-size:11px;font-weight:800;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px}
+  .wb .cli{font-size:16px;font-weight:800;margin-top:5px}.wb .cid{font-size:12px;color:var(--cinza)}.wb .vv{font-size:18px;font-weight:800;color:var(--eletrico);margin-top:5px;font-family:'Bebas Neue'}.wb .vd{font-size:12px;color:var(--cinza);margin-top:2px}
+  .insights{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ins{background:var(--card);border:1px solid var(--linha);border-left:4px solid var(--azul);border-radius:12px;padding:16px 18px}.ins.alert{border-left-color:var(--ambar)}.ins.good{border-left-color:var(--ok)}
+  .ins h4{font-size:14px;font-weight:800;margin-bottom:5px}.ins p{font-size:13px;color:var(--cinza)}.ins .tag{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--azul)}.ins.alert .tag{color:#a15c00}.ins.good .tag{color:var(--ok)}
+  .rf-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+  footer{margin-top:30px;font-size:12px;color:var(--cinza);border-top:1px solid var(--linha);padding-top:16px}footer b{color:var(--tinta)}
+  @media(max-width:860px){.funil{grid-template-columns:1fr}.conv{flex-direction:row}.conv .arrow{transform:rotate(90deg)}.kpis,.hl,.weekbig{grid-template-columns:1fr 1fr}.grid2,.insights,.metabox{grid-template-columns:1fr}.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">Goomer · RevOps / BI</div>
+  <h1>Relatório de Performance — Time Comercial</h1>
+  <div class="subhead"><b>Agosto 2026</b> · atualizado em 01/09 (mês fechado) · fonte: relatórios HubSpot</div>
+  <div class="tabs">
+    <button class="tab on" data-p="sdr">Pré-vendas <small>SDR</small></button>
+    <button class="tab" data-p="vendas">Vendas</button>
+    <button class="tab" data-p="rf">Redes & Franquias</button>
+  </div>
+</div></header>
+<div class="wrap">
+
+  <!-- ===== PRÉ-VENDAS ===== -->
+  <div class="panel on" id="p-sdr">
+    <section><div class="sec-title">Visão do mês · time</div>
+      <div class="funil">
+        <div class="fstep"><div class="k">Agendamentos</div><div class="v num" id="s-ag"></div><div class="sub" id="s-ag-sub"></div></div>
+        <div class="conv"><span class="pct" id="s-cw"></span><span class="arrow">→</span></div>
+        <div class="fstep"><div class="k">Ganhos</div><div class="v num" id="s-gan"></div><div class="sub">etapa 16 · fechados</div></div>
+        <div class="conv"><span class="pct" id="s-ct"></span><span class="arrow">→</span></div>
+        <div class="fstep money"><div class="k">MRR New</div><div class="v num" id="s-mrr"></div><div class="sub">valor dos ganhos</div></div>
+      </div></section>
+    <section><div class="kpis">
+      <div class="kpi"><div class="k">Atingimento da meta</div><div class="v num" id="s-k1"></div><div class="note" id="s-k1n"></div></div>
+      <div class="kpi"><div class="k">Ganhos (MRR New)</div><div class="v num" id="s-k2"></div><div class="note">negócios na etapa 16</div></div>
+      <div class="kpi"><div class="k">MRR New total</div><div class="v num" id="s-k3"></div><div class="note">valor dos ganhos do mês</div></div>
+      <div class="kpi"><div class="k">Win rate do repasse</div><div class="v num" id="s-k4"></div><div class="note">agendamentos que viraram ganho</div></div>
+    </div></section>
+    <section><div class="sec-title">Ranking por atingimento de meta <span class="sec-note">· clique pra reordenar</span></div>
+      <div class="card"><table id="rank-s"><thead><tr><th data-k="pos" style="cursor:default">#</th><th data-k="nome">SDR</th><th data-k="meta">Meta</th><th data-k="ag">Agendados</th><th data-k="pct" class="active">% Meta</th><th data-k="ganhos">Ganhos</th><th data-k="win" class="hide-sm">Win rate</th><th data-k="mrr">MRR New</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+    <section><div class="sec-title">Meta × Realizado por semana <span class="sec-note">· realizado / meta · <b style="color:var(--ok)">verde</b> bateu · <b style="color:var(--ruim)">vermelho</b> abaixo</span></div>
+      <div class="card"><table class="mini" id="sem-s"><thead><tr><th>SDR</th><th>S1 · 03–07</th><th>S2 · 10–14</th><th>S3 · 17–21</th><th>S4 · 24–28</th><th>S5 · 31</th><th>Mês</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+    <section><div class="grid2">
+      <div class="chartbox"><h3>Agendamentos: realizado × meta</h3><p>Barra clara = meta · sólida = realizado</p><div class="cvs"><canvas id="chSmeta"></canvas></div></div>
+      <div class="chartbox"><h3>Agendamentos por origem</h3><p>De onde vêm os leads — time todo</p><div class="cvs"><canvas id="chSori"></canvas></div></div>
+    </div></section>
+    <section><div class="sec-title">Destaques da semana</div><div class="insights">
+      <div class="ins good"><div class="tag">Reconhecimento</div><h4>Todos bateram a meta 🎉</h4><p>O time fechou agosto em 109% (360 agendamentos vs 330), e os 6 SDRs passaram de 100%. Giovani (129%) e Marco (118%) puxaram a frente.</p></div>
+      <div class="ins good"><div class="tag">Virada</div><h4>Anne e Marielle deram o gás na S4</h4><p>Depois de uma S3 fraca do time (67 vs 77), a S4 explodiu (105): Marielle saltou de 17→28 e Anne de 7→21 de uma semana pra outra. Fechamento forte.</p></div>
+      <div class="ins good"><div class="tag">Destaque MRR</div><h4>Marco lidera a receita gerada</h4><p>21 ganhos e R$ 13.362 de MRR New atribuído — o maior do time, convertendo bem o que agenda.</p></div>
+      <div class="ins alert"><div class="tag">Atenção</div><h4>Concentração de origem</h4><p>71% dos agendamentos (257 de 360) vêm de “Online/tel/email”. Vale diversificar canal pra não depender de uma fonte só.</p></div>
+    </div></section>
+    <footer><p><b>Metodologia.</b> Agendamento = negócio com Data de agendamento no período. Ganho/MRR New = negócio na etapa “16. Ganho com Imp. Paga Inbound”. Meta mensal por SDR, quebrada em semanal proporcional a dias úteis. Fonte: relatórios HubSpot de 01/09.</p></footer>
+  </div>
+
+  <!-- ===== VENDAS ===== -->
+  <div class="panel" id="p-vendas">
+    <section><div class="sec-title">Atingimento da meta de MRR · time de vendas</div>
+      <div class="metabox">
+        <div><div class="mb-pct num" id="v-pct"></div><div class="mb-lab">da meta de MRR do mês</div></div>
+        <div><div class="mb-bar"><i id="v-bar"></i></div>
+          <div class="mb-nums"><b id="v-mrr"></b> de <b id="v-meta"></b> · faltou <b class="gap" id="v-gap"></b></div>
+          <div class="mb-nums" id="v-ferias" style="font-size:13px;margin-top:6px"></div></div>
+      </div></section>
+    <section><div class="kpis">
+      <div class="kpi"><div class="k">MRR vendido</div><div class="v num" id="kv1"></div><div class="note">valor fechado no mês</div></div>
+      <div class="kpi"><div class="k">Negócios fechados</div><div class="v num" id="kv2"></div><div class="note">no mês de agosto</div></div>
+      <div class="kpi"><div class="k">Reuniões realizadas</div><div class="v num" id="kv3"></div><div class="note">total do time</div></div>
+      <div class="kpi"><div class="k">Licenças de tablet</div><div class="v num" id="kv4"></div><div class="note">⚠ dado ainda instável</div></div>
+    </div></section>
+    <section><div class="sec-title">Ranking por atingimento de meta individual <span class="sec-note">· clique pra reordenar</span></div>
+      <div class="card"><table id="rank-v"><thead><tr><th data-k="pos" style="cursor:default">#</th><th data-k="nome">Vendedor</th><th data-k="meta">Meta</th><th data-k="mrr" class="active">MRR vendido</th><th data-k="pct">% Meta</th><th data-k="n">Negócios</th><th data-k="reun" class="hide-sm">Reuniões</th><th data-k="lic" class="hide-sm">Licenças</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+    <section><div class="sec-title">Meta × Realizado por semana <span class="sec-note">· quebra 19/24/27/30 · realizado / meta</span></div>
+      <div class="card"><table class="mini" id="sem-v"><thead><tr><th>Vendedor</th><th>S1 · 19%</th><th>S2 · 24%</th><th>S3 · 27%</th><th>S4 · 30%</th><th>Mês</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+    <section><div class="sec-title">Destaques do mês</div>
+      <div class="hl">
+        <div class="hlc"><div class="t">🏆 Destaque do mês</div><div class="big">Tábatha</div><div class="s">178% da meta (R$ 17.774 / R$ 10.000)</div></div>
+        <div class="hlc"><div class="t">Mais fechamentos</div><div class="big">Murilo · 33</div><div class="s">negócios fechados no mês</div></div>
+        <div class="hlc"><div class="t">Mais reuniões</div><div class="big">Murilo · 53</div><div class="s">reuniões realizadas</div></div>
+        <div class="hlc"><div class="t">Maior alta semana→semana</div><div class="big">Murilo</div><div class="s">+R$ 7.344 da S3 pra S4</div></div>
+      </div></section>
+    <section><div class="sec-title">Maior venda de cada semana <span class="sec-note">· cliente · cidade · vendedor</span></div>
+      <div class="weekbig" id="weekbig"></div></section>
+    <section><div class="grid2">
+      <div class="chartbox"><h3>MRR × meta por vendedor</h3><p>Barra clara = meta · sólida = realizado</p><div class="cvs"><canvas id="chVmeta"></canvas></div></div>
+      <div class="chartbox"><h3>MRR por produto</h3><p>Tablet responde por 75% da receita</p><div class="cvs"><canvas id="chVprod"></canvas></div></div>
+    </div></section>
+    <section><div class="sec-title">Leitura de negócio</div><div class="insights">
+      <div class="ins good"><div class="tag">Reconhecimento</div><h4>Vendas fechou em 79% da meta — 93% sem contar férias</h4><p>R$ 78.317 de R$ 98.600. Descontando a Laryssa (férias), a meta efetiva foi R$ 84.600 → 93%. Bem mais forte do que o parcial anterior sugeria.</p></div>
+      <div class="ins good"><div class="tag">Destaques</div><h4>Quatro no azul: Tábatha, Cicero, Marcus e Raphael</h4><p>Tábatha 178%, Cicero 120%, Marcus 101% e Raphael 98% (no fio). Tábatha ainda fez a maior venda do mês: Ikihai (São Paulo), R$ 2.960.</p></div>
+      <div class="ins"><div class="tag">Padrão</div><h4>Fechamento concentrado no fim do mês</h4><p>A S4 (30% da meta) puxou quase tudo — Murilo fez R$ 10.120 só na última semana. Vale distribuir melhor o esforço ao longo do mês.</p></div>
+      <div class="ins alert"><div class="tag">Atenção</div><h4>Ana e Leonardo bem abaixo</h4><p>Ana 38% (R$ 5.329 / R$ 14.000) e Leonardo 27% (R$ 1.219 / R$ 4.500). Pauta de feedback e apoio individual.</p></div>
+    </div></section>
+    <footer><p><b>Metodologia.</b> Vendedor = Proprietário do negócio. MRR vendido = Valor fechado (negócios fechados em agosto). Meta individual por vendedor, quebrada em 4 semanas nos pesos 19/24/27/30. Reuniões = reuniões realizadas por proprietário. Maior venda = maior Valor fechado da semana (cidade cruzada do relatório de ganhos). Laryssa esteve de férias em agosto. Licenças de tablet ainda instáveis. Fonte: relatórios HubSpot de 31/08–01/09.</p></footer>
+  </div>
+
+  <!-- ===== REDES & FRANQUIAS ===== -->
+  <div class="panel" id="p-rf">
+    <section><div class="sec-title">Redes & Franquias <span class="sec-note">· primeira visão — dados iniciais</span></div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Reuniões (mês)</div><div class="v num" id="rf1"></div><div class="note">com marcas/redes</div></div>
+        <div class="kpi"><div class="k">Marcas distintas</div><div class="v num" id="rf2"></div><div class="note">em reunião no mês</div></div>
+        <div class="kpi"><div class="k">Chamadas (mês)</div><div class="v num" id="rf3"></div><div class="note">total do time</div></div>
+        <div class="kpi"><div class="k">MRR gerado</div><div class="v num" id="rf4"></div><div class="note">negócios fechados no mês</div></div>
+      </div></section>
+    <section><div class="sec-title">Atividade por integrante</div>
+      <div class="card"><table id="rf-tab"><thead><tr><th>Integrante</th><th>Reuniões</th><th>Chamadas</th><th>MRR gerado</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+    <section><div class="insights">
+      <div class="ins"><div class="tag">Perfil</div><h4>Divisão clara de atividade</h4><p>Gabriel Moura concentra as reuniões com marcas (9), enquanto Henrique é o motor de prospecção por telefone (150 chamadas). Sonara equilibra os dois.</p></div>
+      <div class="ins alert"><div class="tag">Falta a meta</div><h4>Já temos MRR, faltam as metas</h4><p>O time gerou R$ 3.832 em agosto (Henrique puxando com R$ 2.403). Falta a meta de R&F pra medir atingimento — quando você enviar, eu ligo o gauge aqui.</p></div>
+    </div></section>
+    <footer><p><b>Metodologia.</b> Reuniões = atividades de reunião com marcas/redes no mês, por responsável. Chamadas = atividades de chamada no mês (por ora, só o time de R&F registra). Fonte: relatórios HubSpot de 01/09. Visão inicial — evolui com metas e MRR do time.</p></footer>
+  </div>
+
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const brl0=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const nf=v=>v.toLocaleString('pt-BR');const pctr=v=>Math.round(v)+'%';
+Chart.defaults.font.family='Manrope';Chart.defaults.color='#5b6076';
+
+// ---- Tabs (lazy build) ----
+let builtV=false,builtRF=false;
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');$('p-'+t.dataset.p).classList.add('on');
+  if(t.dataset.p==='vendas'&&!builtV){buildV();builtV=true;}
+  if(t.dataset.p==='rf'&&!builtRF){buildRF();builtRF=true;}
+}));
+
+// ================= SDR =================
+const sdrs=[
+ {nome:"Marielle Cardoso",meta:72,ag:77,ganhos:18,mrr:9379.82,sem:[14,14,17,28,4],prod:{Tablet:42,Autoatendimento:21,Delivery:10,"QR Code":4}},
+ {nome:"Letícia Campos",meta:56,ag:56,ganhos:13,mrr:9450.50,sem:[18,16,9,13,0],prod:{Tablet:27,Autoatendimento:18,Delivery:9,"QR Code":2}},
+ {nome:"Marco Mori",meta:56,ag:66,ganhos:21,mrr:13362.30,sem:[18,18,13,16,1],prod:{Tablet:33,Autoatendimento:21,Delivery:8,"QR Code":4}},
+ {nome:"Vitoria Silva",meta:56,ag:59,ganhos:12,mrr:7994.40,sem:[11,15,11,17,5],prod:{Tablet:23,Autoatendimento:21,Delivery:12,"QR Code":3}},
+ {nome:"Anne Rocha",meta:56,ag:58,ganhos:17,mrr:8121.72,sem:[20,8,7,21,2],prod:{Tablet:33,Autoatendimento:15,Delivery:4,"QR Code":6}},
+ {nome:"Giovani Bruder",meta:34,ag:44,ganhos:7,mrr:3098.13,sem:[11,9,10,10,4],prod:{Tablet:23,Autoatendimento:14,Delivery:4,"QR Code":3}},
+];
+const sMetaSem={"Marielle Cardoso":[17,17,17,17,4],"Letícia Campos":[14,13,13,13,3],"Marco Mori":[14,13,13,13,3],"Vitoria Silva":[14,13,13,13,3],"Anne Rocha":[14,13,13,13,3],"Giovani Bruder":[8,8,8,8,2]};
+const sOri=[["Online/tel/email",257],["Parceiro",41],["Indique e Ganhe",18],["Suporte",13],["Customer Success",8],["Ativo - Expansão",5],["Outros",18]];
+sdrs.forEach(s=>{s.pct=s.ag/s.meta*100;s.win=s.ganhos/s.ag*100;s.first=s.nome.split(' ')[0];});
+const ST=sdrs.reduce((a,s)=>({meta:a.meta+s.meta,ag:a.ag+s.ag,ganhos:a.ganhos+s.ganhos,mrr:a.mrr+s.mrr}),{meta:0,ag:0,ganhos:0,mrr:0});
+$('s-ag').textContent=nf(ST.ag);$('s-ag-sub').textContent='meta '+ST.meta+' · '+pctr(ST.ag/ST.meta*100);
+$('s-gan').textContent=ST.ganhos;$('s-mrr').textContent=brl0(ST.mrr);
+$('s-cw').textContent=pctr(ST.ganhos/ST.ag*100)+' ganham';$('s-ct').textContent=brl0(ST.mrr/ST.ganhos)+' / ganho';
+$('s-k1').textContent=pctr(ST.ag/ST.meta*100);$('s-k1n').textContent=nf(ST.ag)+' de '+nf(ST.meta)+' agendamentos';
+$('s-k2').textContent=ST.ganhos;$('s-k3').textContent=brl0(ST.mrr);$('s-k4').textContent=pctr(ST.ganhos/ST.ag*100);
+(function(){let k='pct',d=-1;const pc=p=>p>=100?'over':p>=90?'mid':'low';
+ function r(){const rows=[...sdrs].sort((a,b)=>typeof a[k]==='string'?a[k].localeCompare(b[k])*d*-1:(a[k]-b[k])*d);
+   const tb=document.querySelector('#rank-s tbody');tb.innerHTML='';
+   rows.forEach((s,i)=>{const f=Math.min(s.pct,100),o=s.pct>=100?'over':'';
+     tb.insertAdjacentHTML('beforeend','<tr><td class="pos">'+(i+1)+'</td><td class="nome">'+s.nome+'</td><td>'+s.meta+'</td><td>'+s.ag+'</td><td><div class="barwrap"><div class="bar"><i class="'+o+'" style="width:'+f+'%"></i></div><span class="pctlab '+pc(s.pct)+'">'+pctr(s.pct)+'</span></div></td><td>'+s.ganhos+'</td><td class="hide-sm">'+pctr(s.win)+'</td><td class="val-money">'+brl(s.mrr)+'</td></tr>');});
+   document.querySelector('#rank-s tfoot').innerHTML='<tr><td></td><td>Time</td><td>'+ST.meta+'</td><td>'+ST.ag+'</td><td style="text-align:right"><span class="pctlab over">'+pctr(ST.ag/ST.meta*100)+'</span></td><td>'+ST.ganhos+'</td><td class="hide-sm">'+pctr(ST.ganhos/ST.ag*100)+'</td><td class="val-money">'+brl(ST.mrr)+'</td></tr>';
+   document.querySelectorAll('#rank-s thead th').forEach(t=>t.classList.toggle('active',t.dataset.k===k));}
+ document.querySelectorAll('#rank-s thead th').forEach(t=>{if(t.dataset.k==='pos')return;t.addEventListener('click',()=>{const kk=t.dataset.k;if(k===kk)d*=-1;else{k=kk;d=(kk==='nome')?1:-1;}r();});});r();})();
+(function(){const tb=document.querySelector('#sem-s tbody');const tm=[0,0,0,0,0],tr=[0,0,0,0,0];
+ const cell=(rz,m,i)=>{const cls=rz>=m?'hit':'miss';return '<td class="wk '+cls+'"><b>'+rz+'</b><span>/'+m+'</span></td>';};
+ sdrs.forEach(s=>{const m=sMetaSem[s.nome],rz=s.sem;m.forEach((v,i)=>{tm[i]+=v;tr[i]+=rz[i];});const t=rz.reduce((a,b)=>a+b,0);
+   tb.insertAdjacentHTML('beforeend','<tr><td>'+s.nome+'</td>'+m.map((v,i)=>cell(rz[i],v,i)).join('')+'<td class="wk '+(t>=s.meta?'hit':'miss')+'"><b>'+t+'</b><span>/'+s.meta+'</span></td></tr>');});
+ const tM=tr.reduce((a,b)=>a+b,0);
+ document.querySelector('#sem-s tfoot').innerHTML='<tr><td>Time</td>'+tm.map((v,i)=>'<td class="wk '+(tr[i]>=v?'hit':'miss')+'"><b>'+tr[i]+'</b><span>/'+v+'</span></td>').join('')+'<td class="wk '+(tM>=ST.meta?'hit':'miss')+'"><b>'+tM+'</b><span>/'+ST.meta+'</span></td></tr>';})();
+const sl=sdrs.map(s=>s.first);
+new Chart($('chSmeta'),{type:'bar',data:{labels:sl,datasets:[{label:'Meta',data:sdrs.map(s=>s.meta),backgroundColor:'#e7e9f2',borderRadius:6,barPercentage:.9,categoryPercentage:.6},{label:'Agendados',data:sdrs.map(s=>s.ag),backgroundColor:sdrs.map(s=>s.pct>=100?'#ff9700':'#1d84ff'),borderRadius:6,barPercentage:.9,categoryPercentage:.6}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,usePointStyle:true,pointStyle:'circle',font:{size:11}}}},scales:{y:{beginAtZero:true,grid:{color:'#eef0f7'}},x:{grid:{display:false}}}}});
+new Chart($('chSori'),{type:'doughnut',data:{labels:sOri.map(o=>o[0]),datasets:[{data:sOri.map(o=>o[1]),backgroundColor:['#2b00ff','#1d84ff','#ff9700','#12b76a','#8aa0d8','#a78bfa','#d5d9e8'],borderWidth:2,borderColor:'#fff'}]},options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.label+': '+c.parsed+' ('+Math.round(c.parsed/360*100)+'%)'}}}}});
+
+// ================= VENDAS =================
+const METAV=98600;
+const vendas=[
+ {nome:"Tábatha Marcelino",meta:10000,mrr:17773.96,n:25,lic:283,reun:31,sem:[5049.80,3643.37,2376.90,6703.89]},
+ {nome:"Raphael Santos",meta:17800,mrr:17473.45,n:25,lic:281,reun:17,sem:[6027.50,1169.80,2833.45,7442.70]},
+ {nome:"Murilo Carlesso",meta:17800,mrr:15054.23,n:33,lic:182,reun:53,sem:[770.30,1389.21,2775.22,10119.50]},
+ {nome:"Cicero Ramon",meta:10000,mrr:11950.64,n:23,lic:188,reun:21,sem:[3390.96,2047.60,3045.20,3466.88]},
+ {nome:"Marcus Mendes",meta:6000,mrr:6066.35,n:27,lic:0,reun:38,sem:[824.72,2099.30,684.60,2457.73]},
+ {nome:"Ana Claudia Bertuci",meta:14000,mrr:5328.81,n:12,lic:77,reun:9,sem:[1281.75,2086.36,618.90,1341.80]},
+ {nome:"Matheus Oliveira",meta:4500,mrr:3449.90,n:11,lic:10,reun:26,sem:[0,449.70,1115.40,1884.80]},
+ {nome:"Leonardo Salles",meta:4500,mrr:1219.30,n:4,lic:6,reun:16,sem:[0,714.50,342.80,162.00]},
+ {nome:"Laryssa Martins",meta:14000,mrr:0,n:0,lic:0,reun:0,sem:[0,0,0,0],ferias:true},
+];
+const vWts=[0.19,0.24,0.27,0.30];
+const maiorSem=[
+ {w:"S1 · 01–07/08",valor:2959.90,cliente:"Ikihai",cidade:"São Paulo",vendedor:"Tábatha Marcelino"},
+ {w:"S2 · 08–14/08",valor:1337.80,cliente:"Pickles Burger",cidade:"Curitiba",vendedor:"Tábatha Marcelino"},
+ {w:"S3 · 15–21/08",valor:1489.90,cliente:"Universo Ozzy",cidade:"S. J. Rio Preto",vendedor:"Tábatha Marcelino"},
+ {w:"S4 · 22–31/08",valor:2329.90,cliente:"Kongo Pizzaria",cidade:"Gramado",vendedor:"Murilo Carlesso"},
+];
+const prodV=[["Tablet",59062.91],["Delivery",8055.35],["Autoatendimento",4522.31],["QR Code",4297.20],["Licenças/Upsell",2209.87],["Outros",169.00]];
+function buildV(){
+ vendas.forEach(v=>{v.pct=v.meta?v.mrr/v.meta*100:0;v.first=v.nome.split(' ')[0];});
+ const VT=vendas.reduce((a,v)=>({mrr:a.mrr+v.mrr,n:a.n+v.n,reun:a.reun+v.reun,lic:a.lic+v.lic}),{mrr:0,n:0,reun:0,lic:0});
+ const pct=VT.mrr/METAV*100;const ativa=METAV-14000;const pctA=VT.mrr/ativa*100;
+ $('v-pct').textContent=Math.round(pct)+'%';$('v-bar').style.width=Math.min(pct,100)+'%';
+ $('v-mrr').textContent=brl0(VT.mrr);$('v-meta').textContent=brl0(METAV);$('v-gap').textContent=brl0(METAV-VT.mrr);
+ $('v-ferias').innerHTML='Laryssa esteve de férias — meta efetiva do time R$ 84.600 → <span class="ok">'+Math.round(pctA)+'%</span>';
+ $('kv1').textContent=brl0(VT.mrr);$('kv2').textContent=VT.n;$('kv3').textContent=VT.reun;$('kv4').textContent=nf(VT.lic);
+ // ranking
+ let k='mrr',d=-1;const pc=p=>p>=100?'over':p>=80?'mid':'low';
+ function r(){const rows=[...vendas].sort((a,b)=>{if(a.ferias!==b.ferias)return a.ferias?1:-1;return typeof a[k]==='string'?a[k].localeCompare(b[k])*d*-1:(a[k]-b[k])*d;});
+   const tb=document.querySelector('#rank-v tbody');tb.innerHTML='';
+   rows.forEach((v,i)=>{const lab=v.ferias?'<span class="pctlab fer">férias</span>':'<span class="pctlab '+pc(v.pct)+'">'+pctr(v.pct)+'</span>';
+     tb.insertAdjacentHTML('beforeend','<tr><td class="pos">'+(v.ferias?'–':(i+1))+'</td><td class="nome">'+v.nome+'</td><td>'+brl0(v.meta)+'</td><td class="val-money">'+brl(v.mrr)+'</td><td>'+lab+'</td><td>'+v.n+'</td><td class="hide-sm">'+v.reun+'</td><td class="hide-sm">'+nf(v.lic)+'</td></tr>');});
+   document.querySelector('#rank-v tfoot').innerHTML='<tr><td></td><td>Time</td><td>'+brl0(METAV)+'</td><td class="val-money">'+brl(VT.mrr)+'</td><td style="text-align:right"><span class="pctlab low">'+Math.round(pct)+'%</span></td><td>'+VT.n+'</td><td class="hide-sm">'+VT.reun+'</td><td class="hide-sm">'+nf(VT.lic)+'</td></tr>';
+   document.querySelectorAll('#rank-v thead th').forEach(t=>t.classList.toggle('active',t.dataset.k===k));}
+ document.querySelectorAll('#rank-v thead th').forEach(t=>{if(t.dataset.k==='pos')return;t.addEventListener('click',()=>{const kk=t.dataset.k;if(k===kk)d*=-1;else{k=kk;d=(kk==='nome')?1:-1;}r();});});r();
+ // semanal meta x realizado
+ const tb=document.querySelector('#sem-v tbody');const tr=[0,0,0,0];const tmeta=[0,0,0,0];
+ vendas.forEach(v=>{const cells=v.sem.map((rz,i)=>{const m=Math.round(v.meta*vWts[i]);tr[i]+=rz;tmeta[i]+=m;
+     if(v.ferias)return '<td class="wk fer"><b>—</b><span>/'+m+'</span></td>';
+     return '<td class="wk '+(rz>=m?'hit':'miss')+'"><b>'+brl0(rz).replace('R$ ','')+'</b><span>/'+brl0(m).replace('R$ ','')+'</span></td>';}).join('');
+   const tot=v.sem.reduce((a,b)=>a+b,0);
+   tb.insertAdjacentHTML('beforeend','<tr><td>'+v.nome+(v.ferias?' <span style="color:#c9cee0;font-size:11px">(férias)</span>':'')+'</td>'+cells+'<td class="wk '+(v.ferias?'fer':(tot>=v.meta?'hit':'miss'))+'"><b>'+brl0(tot).replace('R$ ','')+'</b><span>/'+brl0(v.meta).replace('R$ ','')+'</span></td></tr>');});
+ const tM=tr.reduce((a,b)=>a+b,0);
+ document.querySelector('#sem-v tfoot').innerHTML='<tr><td>Time</td>'+tr.map((v,i)=>'<td class="wk '+(v>=tmeta[i]?'hit':'miss')+'"><b>'+brl0(v).replace('R$ ','')+'</b><span>/'+brl0(tmeta[i]).replace('R$ ','')+'</span></td>').join('')+'<td class="wk '+(tM>=METAV?'hit':'miss')+'"><b>'+brl0(tM).replace('R$ ','')+'</b><span>/'+brl0(METAV).replace('R$ ','')+'</span></td></tr>';
+ // maior venda semana
+ $('weekbig').innerHTML=maiorSem.map(m=>'<div class="wb"><div class="wkn">'+m.w+'</div><div class="cli">'+m.cliente+'</div><div class="cid">'+m.cidade+'</div><div class="vv">'+brl(m.valor)+'</div><div class="vd">'+m.vendedor+'</div></div>').join('');
+ // charts
+ const vl=vendas.filter(v=>!v.ferias).map(v=>v.first);const vv=vendas.filter(v=>!v.ferias);
+ new Chart($('chVmeta'),{type:'bar',data:{labels:vl,datasets:[{label:'Meta',data:vv.map(v=>v.meta),backgroundColor:'#e7e9f2',borderRadius:6,barPercentage:.9,categoryPercentage:.62},{label:'MRR',data:vv.map(v=>v.mrr),backgroundColor:vv.map(v=>v.pct>=100?'#ff9700':'#1d84ff'),borderRadius:6,barPercentage:.9,categoryPercentage:.62}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+brl(c.parsed.y)}}},scales:{y:{beginAtZero:true,grid:{color:'#eef0f7'},ticks:{callback:v=>'R$ '+(v/1000)+'k'}},x:{grid:{display:false}}}}});
+ new Chart($('chVprod'),{type:'doughnut',data:{labels:prodV.map(p=>p[0]),datasets:[{data:prodV.map(p=>p[1]),backgroundColor:['#2b00ff','#ff9700','#1d84ff','#8aa0d8','#12b76a','#d5d9e8'],borderWidth:2,borderColor:'#fff'}]},options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.label+': '+brl(c.parsed)}}}}});
+}
+
+// ================= R&F =================
+const rf=[{nome:"Gabriel Moura",reun:9,chamadas:24,mrr:859.94},{nome:"Sonara Lopes",reun:4,chamadas:58,mrr:569.80},{nome:"Henrique de Oliveira",reun:0,chamadas:150,mrr:2402.51},{nome:"Bel Prevedello (líder)",reun:1,chamadas:0,mrr:0}];
+function buildRF(){
+ const tr=rf.reduce((a,r)=>({reun:a.reun+r.reun,ch:a.ch+r.chamadas,mrr:a.mrr+r.mrr}),{reun:0,ch:0,mrr:0});
+ $('rf1').textContent=tr.reun;$('rf2').textContent=11;$('rf3').textContent=tr.ch;$('rf4').textContent=brl0(tr.mrr);
+ const tb=document.querySelector('#rf-tab tbody');
+ rf.forEach(r=>tb.insertAdjacentHTML('beforeend','<tr><td class="nome">'+r.nome+'</td><td>'+r.reun+'</td><td>'+r.chamadas+'</td><td class="val-money">'+brl0(r.mrr)+'</td></tr>'));
+ document.querySelector('#rf-tab tfoot').innerHTML='<tr><td>Total</td><td>'+tr.reun+'</td><td>'+tr.ch+'</td><td class="val-money">'+brl0(tr.mrr)+'</td></tr>';
+}
+</script>
+</body>
+</html>
