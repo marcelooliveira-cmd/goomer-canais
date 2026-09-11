@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Comercial · Goomer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--azul:#2b00ff;--eletrico:#1d84ff;--ambar:#ff9700;--tinta:#0e1230;--cinza:#5b6076;--linha:#e7e9f2;--fundo:#f4f5fb;--card:#fff;--ok:#12b76a;--ruim:#e5484d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--fundo);color:var(--tinta);line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:48px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.num{font-family:'Bebas Neue',sans-serif;letter-spacing:.5px;line-height:.9}
+header{background:linear-gradient(120deg,var(--azul),var(--eletrico));color:#fff;padding:32px 0 0;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-80px;top:-90px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,151,0,.35),transparent 70%)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;opacity:.85}
+header h1{font-family:'Bebas Neue';font-size:clamp(34px,5.5vw,56px);letter-spacing:1px;margin:6px 0 2px;line-height:.95}
+.subhead{font-size:14px;opacity:.9;font-weight:500;margin-bottom:18px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,.14);color:#fff;border:none;font-family:inherit;font-size:14px;font-weight:700;padding:12px 20px;border-radius:12px 12px 0 0;cursor:pointer;opacity:.8}
+.tab:hover{opacity:1}.tab.on{background:var(--fundo);color:var(--azul);opacity:1}
+.tab small{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+.panel{display:none}.panel.on{display:block}
+section{margin-top:26px}
+.sec-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cinza);margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sec-title::before{content:"";width:22px;height:3px;background:var(--azul);border-radius:2px}
+.sec-note{font-weight:600;text-transform:none;letter-spacing:0;color:var(--cinza)}
+.funil{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:22px 10px;box-shadow:0 8px 30px rgba(43,0,255,.06)}
+.fstep{padding:6px 20px;text-align:center}.fstep .k{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cinza)}
+.fstep .v{font-size:clamp(34px,4.6vw,54px);color:var(--azul);margin-top:4px}.fstep.money .v{color:var(--eletrico)}.fstep .sub{font-size:12px;color:var(--cinza);margin-top:2px;font-weight:500}
+.conv{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px}.conv .arrow{font-size:20px;color:var(--linha)}
+.conv .pct{font-size:12px;font-weight:800;color:#a15c00;background:#fff5e6;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.metabox{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:24px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 8px 30px rgba(43,0,255,.06)}
+.mb-pct{font-size:clamp(56px,9vw,88px);color:var(--azul);line-height:.82}.mb-lab{font-size:13px;color:var(--cinza);font-weight:600;max-width:160px;margin-top:6px}
+.mb-bar{height:16px;background:var(--linha);border-radius:8px;overflow:hidden}.mb-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--azul),var(--eletrico))}
+.mb-nums{margin-top:12px;font-size:15px;color:var(--cinza);font-weight:600}.mb-nums b{color:var(--tinta)}.mb-nums .gap{color:var(--ruim)}.mb-nums .ok{color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:16px 18px}.kpi .k{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza)}
+.kpi .v{font-size:34px;color:var(--tinta);margin-top:4px}.kpi .note{font-size:12px;color:var(--cinza);margin-top:2px}
+.card{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:6px 4px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--cinza);text-align:right;padding:14px 14px 12px;border-bottom:2px solid var(--linha);cursor:pointer;user-select:none;white-space:nowrap}
+thead th:first-child,thead th:nth-child(2){text-align:left}thead th:hover,thead th.active{color:var(--azul)}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--linha);text-align:right;vertical-align:middle}tbody td:first-child,tbody td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:#fafbff}
+.pos{font-family:'Bebas Neue';font-size:22px;color:var(--azul);width:34px}.nome{font-weight:700}.val-money{font-weight:800;color:var(--eletrico)}
+.barwrap{display:flex;align-items:center;gap:8px;justify-content:flex-end}.bar{width:70px;height:8px;background:var(--linha);border-radius:6px;overflow:hidden;flex-shrink:0}
+.bar i{display:block;height:100%;background:var(--eletrico)}.bar i.over{background:var(--ambar)}
+.pctlab{font-weight:800;min-width:40px;display:inline-block}.pctlab.over{color:var(--ambar)}.pctlab.mid{color:var(--eletrico)}.pctlab.low{color:var(--ruim)}.pctlab.fer{color:var(--cinza)}
+tfoot td{padding:13px 14px;font-weight:800;border-top:2px solid var(--linha);text-align:right;background:#fbfbfe}tfoot td:first-child,tfoot td:nth-child(2){text-align:left}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.chartbox{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:18px 18px 12px}.chartbox h3{font-size:13px;font-weight:800;margin-bottom:2px}.chartbox p{font-size:12px;color:var(--cinza);margin-bottom:12px}
+.cvs{position:relative;height:250px}
+.mini td,.mini th{font-size:13px;padding:9px 11px}.mini thead th{text-align:center}.mini thead th:first-child{text-align:left}
+.mini tbody td{text-align:center}.mini tbody td:first-child{text-align:left;font-weight:700}.mini tfoot td{text-align:center}.mini tfoot td:first-child{text-align:left}
+.wk b{font-weight:800;font-size:14px}.wk span{color:#b8bccb;font-weight:600;font-size:11px}.wk.hit b{color:var(--ok)}.wk.miss b{color:var(--ruim)}.wk.fer b{color:#c9cee0}
+.hl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.hlc{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:16px 18px}.hlc .t{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ambar)}
+.hlc .big{font-size:22px;font-weight:800;margin-top:6px;line-height:1.1}.hlc .s{font-size:12px;color:var(--cinza);margin-top:3px}
+.weekbig{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.wb{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:14px}.wb .wkn{font-size:11px;font-weight:800;color:var(--cinza);text-transform:uppercase}
+.wb .cli{font-size:16px;font-weight:800;margin-top:5px}.wb .cid{font-size:12px;color:var(--cinza)}.wb .vv{font-size:18px;font-weight:800;color:var(--eletrico);margin-top:5px;font-family:'Bebas Neue'}.wb .vd{font-size:12px;color:var(--cinza);margin-top:2px}
+.selrow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+select{font-family:inherit;font-size:14px;font-weight:700;padding:8px 12px;border:1px solid var(--linha);border-radius:10px;background:#fff;color:var(--tinta)}
+.marcas-box{margin-top:14px;background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:16px 18px;min-height:60px}
+.marcas-box h4{font-size:13px;font-weight:800;margin-bottom:8px}.marcas-box .chips{display:flex;flex-wrap:wrap;gap:8px}
+.mchip{font-size:12px;font-weight:600;background:#eef1fb;color:var(--tinta);padding:5px 10px;border-radius:20px}
+.hint{font-size:12px;color:var(--cinza);font-style:italic}
+.ftag{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#b26a00;background:#fff3e0;padding:2px 7px;border-radius:20px;margin-left:6px}
+.wk.fer b{color:#b26a00}.wk.fer span{color:#d9a24a}
+.ferias-list{display:flex;flex-direction:column;gap:10px}
+.fitem{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#fff8ef;border:1px solid #ffe4c2;border-radius:10px}
+.ficon{font-size:18px}.fnome{font-weight:800;min-width:180px}.fper{color:var(--cinza);font-weight:600}
+th.prodcol,td.prodcol{text-align:right;font-size:12px;white-space:nowrap}
+td.prodcol{color:#3a4066;font-variant-numeric:tabular-nums}
+td.prodcol .z{color:#c9cee0}
+#rk-v{min-width:1120px}
+#rk-v th,#rk-v td{padding-left:9px;padding-right:9px;white-space:nowrap}
+.srb{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:5px;margin-right:7px;vertical-align:middle}
+.sr-sen{background:#eae4ff;color:#5b21b6}.sr-ple{background:#e0edff;color:#1d4ed8}
+.sr-jun{background:#e6f5ec;color:#12805c}.sr-esp{background:#fff0e0;color:#b45309}
+th.liccol,td.liccol{text-align:right;font-size:12px;white-space:nowrap;background:#fbfcff}
+td.liccol{font-weight:700;color:#2b00ff}
+footer{margin-top:30px;font-size:12px;color:var(--cinza);border-top:1px solid var(--linha);padding-top:16px}footer b{color:var(--tinta)}
+@media(max-width:860px){.funil{grid-template-columns:1fr}.conv{flex-direction:row}.conv .arrow{transform:rotate(90deg)}.kpis,.hl,.weekbig{grid-template-columns:1fr 1fr}.grid2,.metabox{grid-template-columns:1fr}.hide-sm{display:none}}
+</style></head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">Goomer · RevOps / BI</div>
+  <h1>Relatório de Performance — Time Comercial</h1>
+  <div class="subhead" id="subhead"></div>
+  <div class="tabs">
+    <button class="tab on" data-p="sdr">Pré-vendas <small>SDR</small></button>
+    <button class="tab" data-p="vendas">Vendas <small>SMB</small></button>
+    <button class="tab" data-p="rf">Redes & Franquias</button>
+  </div>
+</div></header>
+<div class="wrap">
+  <div class="panel on" id="p-sdr"></div>
+  <div class="panel" id="p-vendas"></div>
+  <div class="panel" id="p-rf"></div>
+</div>
+<script>
+const DATA = {"periodo": "Setembro 2026", "atualizado": "11/09", "sdr": {"sdrs": [{"nome": "Marielle Cardoso", "meta": 70, "ag": 12, "sem": [3, 9, 0, 0, 0], "ganhos": 6, "mrr": 3113.2500000000005, "prod": {"Tablet": 8, "Delivery": 1, "Autoatendimento": 2, "QR Code": 1}}, {"nome": "Letícia Campos", "meta": 52, "ag": 13, "sem": [1, 12, 0, 0, 0], "ganhos": 4, "mrr": 2260.6, "prod": {"Autoatendimento": 1, "Tablet": 6, "Delivery": 6}}, {"nome": "Marco Mori", "meta": 52, "ag": 27, "sem": [18, 9, 0, 0, 0], "ganhos": 9, "mrr": 3648.7300000000005, "prod": {"Autoatendimento": 10, "Tablet": 9, "Delivery": 6, "QR Code": 2}}, {"nome": "Vitoria Silva", "meta": 52, "ag": 15, "sem": [6, 9, 0, 0, 0], "ganhos": 3, "mrr": 2262.4100000000003, "prod": {"Autoatendimento": 6, "QR Code": 1, "Delivery": 1, "Tablet": 7}}, {"nome": "Anne Rocha", "meta": 52, "ag": 17, "sem": [6, 11, 0, 0, 0], "ganhos": 2, "mrr": 765.8, "prod": {"Autoatendimento": 6, "QR Code": 1, "Tablet": 9, "Delivery": 1}}, {"nome": "Giovani Bruder", "meta": 52, "ag": 12, "sem": [6, 6, 0, 0, 0], "ganhos": 3, "mrr": 2198.7000000000003, "prod": {"Tablet": 8, "Autoatendimento": 3, "QR Code": 1}}], "metasem": {"Marielle Cardoso": [13, 17, 17, 17, 7], "Letícia Campos": [10, 12, 12, 12, 5], "Marco Mori": [10, 12, 12, 12, 5], "Vitoria Silva": [10, 12, 12, 12, 5], "Anne Rocha": [10, 12, 12, 12, 5], "Giovani Bruder": [10, 12, 12, 12, 5]}, "semlabels": ["S1", "S2", "S3", "S4", "S5"], "origem": [["Online/tel/email", 77], ["Parceiro", 3], ["Indique e Ganhe", 5], ["Outros", 9], ["Suporte", 2]], "total_ag": 96}, "vendas": {"vend": [{"nome": "Raphael Santos", "sr": "Especialista", "meta": 17800, "mrr": 5983.53, "n": 11, "lic": 105, "reun": 7, "sem": [439.9, 5543.63, 0.0, 0.0], "ferias": false, "prod": {"Upsell": 289.53, "Outros": 99.9, "Tablet": 5594.1}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Laryssa Martins", "sr": "Sênior", "meta": 14000, "mrr": 4514.64, "n": 8, "lic": 87, "reun": 3, "sem": [1338.7, 3175.94, 0.0, 0.0], "ferias": false, "prod": {"Upsell": 361.04, "Tablet": 4153.6}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Ana Claudia Bertuci", "sr": "Sênior", "meta": 14000, "mrr": 2715.85, "n": 10, "lic": 40, "reun": 6, "sem": [457.8, 2258.05, 0.0, 0.0], "ferias": false, "prod": {"Upsell": 417.13, "QR Code": 351.17, "Delivery": 199.9, "Tablet": 1289.85, "Autoatendimento": 457.8}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Tábatha Marcelino", "sr": "Pleno", "meta": 10000, "mrr": 2413.87, "n": 8, "lic": 58, "reun": 7, "sem": [1036.38, 1377.49, 0.0, 0.0], "ferias": false, "prod": {"Upsell": 887.17, "QR Code": 299.9, "Tablet": 1226.8}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Leonardo Salles", "sr": "Júnior", "meta": 6600, "mrr": 2105.63, "n": 7, "lic": 6, "reun": 6, "sem": [1765.83, 339.8, 0.0, 0.0], "ferias": false, "prod": {"Autoatendimento": 1641.73, "Tablet": 463.9}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Marcus Mendes", "sr": "Júnior", "meta": 6600, "mrr": 1698.99, "n": 9, "lic": 0, "reun": 4, "sem": [723.38, 975.61, 0.0, 0.0], "ferias": false, "prod": {"Delivery": 1698.99}, "fsem": [false, false, false, false], "ferias_periodos": []}, {"nome": "Cicero Ramon", "sr": "Pleno", "meta": 10000, "mrr": 1274.3, "n": 7, "lic": 18, "reun": 0, "sem": [1274.3, 0.0, 0.0, 0.0], "ferias": false, "prod": {"Delivery": 0.0, "Outros": 169.9, "QR Code": 99.9, "Tablet": 1004.5}, "fsem": [false, true, false, false], "ferias_periodos": [["03/09", "17/09"]]}, {"nome": "Murilo Carlesso", "sr": "Especialista", "meta": 17800, "mrr": 1010.91, "n": 8, "lic": 18, "reun": 3, "sem": [821.91, 189.0, 0.0, 0.0], "ferias": false, "prod": {"Upsell": 677.7, "QR Code": 0.0, "Tablet": 103.21, "Outros": 230.0}, "fsem": [false, true, false, false], "ferias_periodos": [["08/09", "14/09"]]}, {"nome": "Matheus Oliveira", "sr": "Júnior", "meta": 6600, "mrr": 987.4, "n": 5, "lic": 0, "reun": 2, "sem": [987.4, 0.0, 0.0, 0.0], "ferias": false, "prod": {"Autoatendimento": 987.4}, "fsem": [false, false, false, false], "ferias_periodos": []}], "wts": [0.19, 0.24, 0.27, 0.3], "semlabels": ["S1", "S2", "S3", "S4"], "maiorsem": [{"w": "S1 · 01–08", "x": {"valor": 1237.9, "cliente": "Rikay Sushi", "cidade": "Ibitinga", "vendedor": "Laryssa Martins"}}, {"w": "S2 · 08–15", "x": {"valor": 1369.8, "cliente": "Tablet - Floriano Burger", "cidade": "Brasília", "vendedor": "Raphael Santos"}}, {"w": "S3 · 15–22", "x": {}}, {"w": "S4 · 22–01", "x": {}}], "prodv": [["Tablet", 13835.96], ["Autoatendimento", 3086.93], ["Upsell", 2632.57], ["Delivery", 1898.89], ["QR Code", 750.97], ["Outros", 499.8]], "prod_cols": ["Tablet", "Autoatendimento", "Delivery", "QR Code", "Upsell", "Outros"], "oppv": [{"nome": "Raphael Santos", "sr": "Especialista", "rec": 14, "ganhas": 4, "ferias": false}, {"nome": "Tábatha Marcelino", "sr": "Pleno", "rec": 11, "ganhas": 1, "ferias": false}, {"nome": "Ana Claudia Bertuci", "sr": "Sênior", "rec": 9, "ganhas": 4, "ferias": false}, {"nome": "Cicero Ramon", "sr": "Pleno", "rec": 0, "ganhas": 0, "ferias": false}, {"nome": "Laryssa Martins", "sr": "Sênior", "rec": 7, "ganhas": 2, "ferias": false}, {"nome": "Murilo Carlesso", "sr": "Especialista", "rec": 2, "ganhas": 0, "ferias": false}, {"nome": "Marcus Mendes", "sr": "Júnior", "rec": 12, "ganhas": 2, "ferias": false}, {"nome": "Leonardo Salles", "sr": "Júnior", "rec": 7, "ganhas": 0, "ferias": false}, {"nome": "Matheus Oliveira", "sr": "Júnior", "rec": 14, "ganhas": 1, "ferias": false}], "funnel": {"Raphael Santos": [["4. Analise de DMU", 4, 3583.5], ["16. Ganho com Imp. Paga Inbound", 4, 2568.6], ["7. Fechamento", 1, 450.95], ["1. Preparacao de Reuniao", 3, 0.0], ["17. Perdido (SMB)", 2, 0.0]], "Tábatha Marcelino": [["4. Analise de DMU", 4, 1986.15], ["6. Negociacao", 1, 660.95], ["16. Ganho com Imp. Paga Inbound", 1, 450.9], ["7. Fechamento", 1, 366.95], ["1. Preparacao de Reuniao", 3, 0.0], ["17. Perdido (SMB)", 1, 0.0]], "Ana Claudia Bertuci": [["16. Ganho com Imp. Paga Inbound", 4, 1589.65], ["17. Perdido (SMB)", 2, 834.8], ["6. Negociacao", 1, 681.69], ["4. Analise de DMU", 1, 534.9], ["2. Tentativa de Reuniao", 1, 0.0]], "Cicero Ramon": [], "Laryssa Martins": [["16. Ganho com Imp. Paga Inbound", 2, 2433.8], ["4. Analise de DMU", 3, 2229.7], ["1. Preparacao de Reuniao", 1, 0.0], ["2. Tentativa de Reuniao", 1, 0.0]], "Murilo Carlesso": [["3. Aguardando Proposta", 1, 0.0], ["1. Preparacao de Reuniao", 1, 0.0]], "Marcus Mendes": [["16. Ganho com Imp. Paga Inbound", 2, 438.54], ["1. Preparacao de Reuniao", 8, 0.0], ["3. Aguardando Proposta", 1, 0.0], ["2. Tentativa de Reuniao", 1, 0.0]], "Leonardo Salles": [["3. Aguardando Proposta", 1, 1146.6], ["4. Analise de DMU", 1, 861.7], ["17. Perdido (SMB)", 3, 722.6], ["6. Negociacao", 1, 228.85], ["1. Preparacao de Reuniao", 1, 0.0]], "Matheus Oliveira": [["4. Analise de DMU", 7, 2003.5], ["16. Ganho com Imp. Paga Inbound", 1, 342.8], ["1. Preparacao de Reuniao", 4, 0.0], ["3. Aguardando Proposta", 1, 0.0], ["17. Perdido (SMB)", 1, 0.0]]}, "novos": {"Ana Claudia Bertuci": 5, "Raphael Santos": 5, "Laryssa Martins": 3, "Marcus Mendes": 5, "Tábatha Marcelino": 1, "Leonardo Salles": 2, "Cicero Ramon": 1, "Matheus Oliveira": 2}, "meta_total": 103400, "meta_ativa": 103400, "ferias": [], "ferias_box": [{"nome": "Cicero Ramon", "periodos": [["03/09", "17/09"]]}, {"nome": "Murilo Carlesso", "periodos": [["08/09", "14/09"]]}]}, "rf": {"membros": [{"nome": "Gabriel Moura", "reun": 6, "chamadas": 10, "mrr": 0.0}, {"nome": "Sonara Lopes", "reun": 0, "chamadas": 52, "mrr": 0.0}, {"nome": "Henrique de Oliveira", "reun": 0, "chamadas": 138, "mrr": 0.0}, {"nome": "Bel Prevedello (líder)", "reun": 0, "chamadas": 0, "mrr": 0.0}], "marcas": 83, "etapas": [["Estratégia Acesso DMU", 26], ["Proposta Piloto", 12], ["Piloto Ativo/ em acompanhamento", 9], ["Expansão Acelerada", 7], ["Reunião Realizada", 7], ["Agendamento de Reunião", 5], ["Expansão Inicial", 5], ["Piloto Aceite/Em Implementação", 5], ["Expansão Final", 2], ["Perdido", 2], ["Contato DMU", 2], ["Contas-alvo", 1]], "marcas_por_etapa": {"Agendamento de Reunião": ["Bacio di Latte", "Bom Beef Churrasco", "Croasonho / Croasonho Gourmet (Halipar)", "Ráscal", "Vivenda do Camarão"], "Expansão Acelerada": ["Chocolate Lugano", "Dona Baunilha", "El Patron", "Habib's", "La Brasa Burger", "Sterna Café", "Água Doce Cachaçaria"], "Proposta Piloto": ["Abbraccio", "Bella Capri", "Davvero Gelato", "Espetto Carioca", "Eu Tu Eles", "General Prime Burger", "Itália no Box", "Jhonny Rockets", "Outback", "Smoov", "Tea Shop", "Time Out Market"], "Expansão Final": ["Empório Coisas de Minas", "Mundo Animal"], "Reunião Realizada": ["Cabana Hamburgueria", "Chiquinho Sorvete", "Chopp Time", "Gurumê", "Koni", "Mania de Churrasco", "Oakberry Açaí"], "Expansão Inicial": ["Detroit Steakhouse", "Fran's Café", "Gendai (Grupo Trigo)", "Ragazzo!", "Temakeria Makis Place"], "Estratégia Acesso DMU": ["Bibi Sucos", "Cacau Show", "California Coffee", "Casa Pilão", "Chef da Empada", "Coco Bambu", "Divino Fogão", "DuckBill", "FNP - Frango no pote", "Flow Fresh TO GO", "Freddo Brasil", "Frutos de Góias", "Havanna", "Ice Creamy", "La Fruta Açai", "Milk Shake Mix", "Milk Shake up", "Mr. Cheff Gastronomia", "Nakato Sushi", "Oggi Sorvetes", "Pizza Crek", "Pizza Hut", "Puro Açaí", "Sr. Espetto", "Sushifan", "Temakeria & Cia"], "Piloto Aceite/Em Implementação": ["Camarada Camarão", "Casa Bauducco", "HNT Bowl", "Rei do Mate", "Vizinhando (Grupo Alento)"], "Piloto Ativo/ em acompanhamento": ["Cosela", "Grão Espresso", "Ital'in House", "Kopenhagen", "Lug's", "Madero Steakhouse", "Mané", "Pecorino", "T.T. Burger"], "Perdido": ["Maria Pitanga Açaiteria", "The Steak Factory"], "Contas-alvo": ["Cia Paulista de Pizza"], "Contato DMU": ["Caracol Chocolates", "Grupo Império"]}}};
+const $=s=>document.querySelector(s);
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const brl0=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const nf=v=>v.toLocaleString('pt-BR');const pctr=v=>Math.round(v)+'%';
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const SRCLS={'Sênior':'sr-sen','Pleno':'sr-ple','Júnior':'sr-jun','Especialista':'sr-esp'};
+const srb=sr=>sr?`<span class="srb ${SRCLS[sr]||''}">${sr}</span>`:'';
+const nomeSr=v=>srb(v.sr)+v.nome;
+Chart.defaults.font.family='Manrope';Chart.defaults.color='#5b6076';
+$('#subhead').innerHTML='<b>'+DATA.periodo+'</b> · atualizado em '+DATA.atualizado+' · fonte: relatórios HubSpot';
+
+function sortTable(tb,rows,render,def){let k=def,d=-1;
+  function go(){const r=[...rows].sort((a,b)=>{if(!!a.ferias!==!!b.ferias)return a.ferias?1:-1;const x=a[k],y=b[k];return typeof x==='string'?x.localeCompare(y)*d*-1:(x-y)*d;});render(r,k);
+    tb.querySelectorAll('thead th').forEach(t=>t.classList.toggle('active',t.dataset.k===k));}
+  tb.querySelectorAll('thead th').forEach(t=>{if(!t.dataset.k||t.dataset.k==='pos')return;t.addEventListener('click',()=>{const kk=t.dataset.k;if(k===kk)d*=-1;else{k=kk;d=(kk==='nome')?1:-1;}go();});});go();}
+
+// ===================== SDR =====================
+(function(){const P=$('#p-sdr');const S=DATA.sdr;if(!S){P.innerHTML='<p class="hint" style="margin-top:24px">Sem dados de Pré-vendas neste período.</p>';return;}
+ S.sdrs.forEach(s=>{s.pct=s.meta?s.ag/s.meta*100:0;s.win=s.ag?s.ganhos/s.ag*100:0;s.first=s.nome.split(' ')[0];});
+ const T=S.sdrs.reduce((a,s)=>({meta:a.meta+s.meta,ag:a.ag+s.ag,ganhos:a.ganhos+s.ganhos,mrr:a.mrr+s.mrr}),{meta:0,ag:0,ganhos:0,mrr:0});
+ // virada s->s
+ let vira={nome:'',d:-1e9};S.sdrs.forEach(s=>{const n=s.sem.length;if(n>=2){const dd=s.sem[n-2]-s.sem[n-3>=0?n-3:0];}});
+ let bestJump={nome:'',v:-1e9};S.sdrs.forEach(s=>{const n=s.sem.length;for(let i=1;i<n;i++){const j=s.sem[i]-s.sem[i-1];if(j>bestJump.v){bestJump={nome:s.first,v:j,i:i};}}});
+ const topPct=[...S.sdrs].sort((a,b)=>b.pct-a.pct)[0];const topMrr=[...S.sdrs].sort((a,b)=>b.mrr-a.mrr)[0];
+ P.innerHTML=`
+  <section><div class="sec-title">Visão do mês · time</div>
+   <div class="funil">
+    <div class="fstep"><div class="k">Agendamentos</div><div class="v num">${nf(T.ag)}</div><div class="sub">meta ${T.meta} · ${pctr(T.ag/T.meta*100)}</div></div>
+    <div class="conv"><span class="pct">${pctr(T.ganhos/T.ag*100)} ganham</span><span class="arrow">→</span></div>
+    <div class="fstep"><div class="k">Ganhos</div><div class="v num">${T.ganhos}</div><div class="sub">etapa 16 · fechados</div></div>
+    <div class="conv"><span class="pct">${brl0(T.mrr/T.ganhos)} / ganho</span><span class="arrow">→</span></div>
+    <div class="fstep money"><div class="k">MRR New</div><div class="v num">${brl0(T.mrr)}</div><div class="sub">valor dos ganhos</div></div>
+   </div></section>
+  <section><div class="kpis">
+    <div class="kpi"><div class="k">Atingimento da meta</div><div class="v num">${pctr(T.ag/T.meta*100)}</div><div class="note">${nf(T.ag)} de ${nf(T.meta)} agendamentos</div></div>
+    <div class="kpi"><div class="k">Ganhos (MRR New)</div><div class="v num">${T.ganhos}</div><div class="note">negócios na etapa 16</div></div>
+    <div class="kpi"><div class="k">MRR New total</div><div class="v num">${brl0(T.mrr)}</div><div class="note">valor dos ganhos do mês</div></div>
+    <div class="kpi"><div class="k">Win rate do repasse</div><div class="v num">${pctr(T.ganhos/T.ag*100)}</div><div class="note">agendamentos que viraram ganho</div></div>
+   </div></section>
+  <section><div class="sec-title">Ranking por atingimento de meta <span class="sec-note">· clique pra reordenar</span></div>
+   <div class="card"><table id="rk-s"><thead><tr><th data-k="pos" style="cursor:default">#</th><th data-k="nome">SDR</th><th data-k="meta">Meta</th><th data-k="ag">Agendados</th><th data-k="pct" class="active">% Meta</th><th data-k="ganhos">Ganhos</th><th data-k="win" class="hide-sm">Win rate</th><th data-k="mrr">MRR New</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="sec-title">Meta × Realizado por semana <span class="sec-note">· realizado / meta</span></div>
+   <div class="card"><table class="mini" id="sm-s"><thead><tr><th>SDR</th>${S.semlabels.map(l=>'<th>'+l+'</th>').join('')}<th>Mês</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="grid2">
+    <div class="chartbox"><h3>Agendamentos: realizado × meta</h3><p>Barra clara = meta · sólida = realizado</p><div class="cvs"><canvas id="c-smeta"></canvas></div></div>
+    <div class="chartbox"><h3>Agendamentos por origem</h3><p>De onde vêm os leads — time todo</p><div class="cvs"><canvas id="c-sori"></canvas></div></div>
+   </div></section>
+  <section><div class="sec-title">Destaques da semana</div><div class="hl" id="hl-s"></div></section>`;
+ // ranking
+ const pc=p=>p>=100?'over':p>=90?'mid':'low';const tb=$('#rk-s');
+ sortTable(tb,S.sdrs,(rows)=>{const b=tb.querySelector('tbody');b.innerHTML='';
+   rows.forEach((s,i)=>{const f=Math.min(s.pct,100),o=s.pct>=100?'over':'';
+     b.appendChild(el('tr',null,`<td class="pos">${i+1}</td><td class="nome">${s.nome}</td><td>${s.meta}</td><td>${s.ag}</td><td><div class="barwrap"><div class="bar"><i class="${o}" style="width:${f}%"></i></div><span class="pctlab ${pc(s.pct)}">${pctr(s.pct)}</span></div></td><td>${s.ganhos}</td><td class="hide-sm">${pctr(s.win)}</td><td class="val-money">${brl(s.mrr)}</td>`));});
+   tb.querySelector('tfoot').innerHTML=`<tr><td></td><td>Time</td><td>${T.meta}</td><td>${T.ag}</td><td style="text-align:right"><span class="pctlab ${pc(T.ag/T.meta*100)}">${pctr(T.ag/T.meta*100)}</span></td><td>${T.ganhos}</td><td class="hide-sm">${pctr(T.ganhos/T.ag*100)}</td><td class="val-money">${brl(T.mrr)}</td></tr>`;},'pct');
+ // semanal
+ (function(){const b=$('#sm-s tbody');const nS=S.semlabels.length;const tm=Array(nS).fill(0),tr=Array(nS).fill(0);
+   S.sdrs.forEach(s=>{const m=S.metasem[s.nome]||[];m.forEach((v,i)=>{tm[i]+=v;tr[i]+=s.sem[i]||0;});const t=s.sem.reduce((a,b)=>a+b,0);
+     b.appendChild(el('tr',null,`<td>${s.nome}</td>`+m.map((v,i)=>`<td class="wk ${(s.sem[i]||0)>=v?'hit':'miss'}"><b>${s.sem[i]||0}</b><span>/${v}</span></td>`).join('')+`<td class="wk ${t>=s.meta?'hit':'miss'}"><b>${t}</b><span>/${s.meta}</span></td>`));});
+   const tM=tr.reduce((a,b)=>a+b,0);
+   $('#sm-s tfoot').innerHTML=`<tr><td>Time</td>`+tm.map((v,i)=>`<td class="wk ${tr[i]>=v?'hit':'miss'}"><b>${tr[i]}</b><span>/${v}</span></td>`).join('')+`<td class="wk ${tM>=T.meta?'hit':'miss'}"><b>${tM}</b><span>/${T.meta}</span></td></tr>`;})();
+ // charts
+ const sl=S.sdrs.map(s=>s.first);
+ new Chart($('#c-smeta'),{type:'bar',data:{labels:sl,datasets:[{label:'Meta',data:S.sdrs.map(s=>s.meta),backgroundColor:'#e7e9f2',borderRadius:6,barPercentage:.9,categoryPercentage:.6},{label:'Agendados',data:S.sdrs.map(s=>s.ag),backgroundColor:S.sdrs.map(s=>s.pct>=100?'#ff9700':'#1d84ff'),borderRadius:6,barPercentage:.9,categoryPercentage:.6}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,usePointStyle:true,pointStyle:'circle',font:{size:11}}}},scales:{y:{beginAtZero:true,grid:{color:'#eef0f7'}},x:{grid:{display:false}}}}});
+ new Chart($('#c-sori'),{type:'doughnut',data:{labels:S.origem.map(o=>o[0]),datasets:[{data:S.origem.map(o=>o[1]),backgroundColor:['#2b00ff','#1d84ff','#ff9700','#12b76a','#8aa0d8','#a78bfa','#d5d9e8'],borderWidth:2,borderColor:'#fff'}]},options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.label+': '+c.parsed+' ('+Math.round(c.parsed/T.ag*100)+'%)'}}}}});
+ // highlights
+ $('#hl-s').innerHTML=[
+   ['Time no mês',pctr(T.ag/T.meta*100),`${nf(T.ag)} de ${nf(T.meta)} agendamentos`],
+   ['Destaque de meta',topPct.first+' · '+pctr(topPct.pct),'maior atingimento'],
+   ['Líder de MRR',topMrr.first+' · '+brl0(topMrr.mrr),topMrr.ganhos+' ganhos'],
+   ['Maior virada semana→semana',bestJump.nome,'+'+bestJump.v+' agendamentos na S'+(bestJump.i+1)],
+ ].map(h=>`<div class="hlc"><div class="t">${h[0]}</div><div class="big">${h[1]}</div><div class="s">${h[2]}</div></div>`).join('');
+})();
+
+// ===================== VENDAS (lazy) =====================
+let vBuilt=false;
+function buildV(){const P=$('#p-vendas');const V=DATA.vendas;if(!V){P.innerHTML='<p class="hint" style="margin-top:24px">Sem dados de Vendas.</p>';return;}
+ V.vend.forEach(v=>{v.pct=v.meta?v.mrr/v.meta*100:0;v.first=v.nome.split(' ')[0];});
+ const VT=V.vend.reduce((a,v)=>({mrr:a.mrr+v.mrr,n:a.n+v.n,reun:a.reun+v.reun,lic:a.lic+v.lic}),{mrr:0,n:0,reun:0,lic:0});
+ const pct=VT.mrr/V.meta_total*100, pctA=VT.mrr/V.meta_ativa*100;
+ P.innerHTML=`
+  <section><div class="sec-title">Atingimento da meta de MRR · time de vendas</div>
+   <div class="metabox"><div><div class="mb-pct num">${Math.round(pct)}%</div><div class="mb-lab">da meta de MRR do mês</div></div>
+    <div><div class="mb-bar"><i style="width:${Math.min(pct,100)}%"></i></div>
+     <div class="mb-nums"><b>${brl0(VT.mrr)}</b> de <b>${brl0(V.meta_total)}</b> · faltou <b class="gap">${brl0(V.meta_total-VT.mrr)}</b></div>
+     ${V.ferias.length?`<div class="mb-nums" style="font-size:13px;margin-top:6px">${V.ferias.join(', ')} de férias — meta efetiva ${brl0(V.meta_ativa)} → <span class="ok">${Math.round(pctA)}%</span></div>`:''}</div></div></section>
+  <section><div class="kpis">
+    <div class="kpi"><div class="k">MRR vendido</div><div class="v num">${brl0(VT.mrr)}</div><div class="note">valor fechado no mês</div></div>
+    <div class="kpi"><div class="k">Negócios fechados</div><div class="v num">${VT.n}</div><div class="note">no mês</div></div>
+    <div class="kpi"><div class="k">Reuniões realizadas</div><div class="v num">${VT.reun}</div><div class="note">total do time</div></div>
+    <div class="kpi"><div class="k">Licenças de tablet</div><div class="v num">${nf(VT.lic)}</div><div class="note">tablets vendidos no mês</div></div>
+   </div></section>
+  <section><div class="sec-title">Ranking por atingimento de meta individual <span class="sec-note">· clique pra reordenar</span></div>
+   <div class="card" style="overflow-x:auto"><table id="rk-v"><thead><tr><th data-k="pos" style="cursor:default">#</th><th data-k="nome">Vendedor</th><th data-k="meta">Meta</th><th data-k="mrr" class="active">MRR vendido</th><th data-k="pct">% Meta</th>${V.prod_cols.includes('Tablet')?'<th class="prodcol">Tablet R$</th>':''}<th data-k="lic" class="liccol">Licenças de Tablet</th>${V.prod_cols.filter(c=>c!=='Tablet').map(c=>'<th class="prodcol">'+c+'</th>').join('')}<th data-k="n">Negócios</th><th data-k="reun" class="hide-sm">Reuniões</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="sec-title">Meta × Realizado por semana <span class="sec-note">· quebra 19/24/27/30 · realizado / meta</span></div>
+   <div class="card"><table class="mini" id="sm-v"><thead><tr><th>Vendedor</th>${V.semlabels.map((l,i)=>'<th>'+l+' · '+Math.round(V.wts[i]*100)+'%</th>').join('')}<th>Mês</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  ${(V.ferias_box&&V.ferias_box.length)?`<section><div class="sec-title">Férias no mês <span class="sec-note">· programadas + já ocorridas · nas semanas acima aparece "férias"</span></div>
+   <div class="card" style="padding:16px 18px"><div class="ferias-list">${V.ferias_box.map(f=>`<div class="fitem"><span class="ficon">🏖️</span><span class="fnome">${f.nome}</span><span class="fper">${f.periodos.map(p=>p[0]+' a '+p[1]).join(' · ')}</span></div>`).join('')}</div></div></section>`:''}
+  <section><div class="sec-title">Oportunidades recebidas × conversão <span class="sec-note">· clique pra reordenar</span></div>
+   <div class="card"><table id="rk-o"><thead><tr><th data-k="pos" style="cursor:default">#</th><th data-k="nome">Vendedor</th><th data-k="rec">Recebidas</th><th data-k="ganhas">Ganhas</th><th data-k="win" class="active">Win rate</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="sec-title">Funil de negócios por vendedor <span class="sec-note">· selecione um vendedor</span></div>
+   <div class="selrow"><select id="fsel"></select></div>
+   <div class="card"><table class="mini" id="fun-v"><thead><tr><th>Etapa</th><th>Negócios</th><th>Valor</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="sec-title">Destaques do mês</div><div class="hl" id="hl-v"></div></section>
+  <section><div class="sec-title">Maior venda de cada semana <span class="sec-note">· cliente · cidade · vendedor</span></div><div class="weekbig" id="wbig"></div></section>
+  <section><div class="grid2">
+    <div class="chartbox"><h3>MRR × meta por vendedor</h3><p>Barra clara = meta · sólida = realizado</p><div class="cvs"><canvas id="c-vmeta"></canvas></div></div>
+    <div class="chartbox"><h3>MRR por produto</h3><p>Distribuição da receita fechada</p><div class="cvs"><canvas id="c-vprod"></canvas></div></div>
+   </div></section>`;
+ const pc=p=>p>=100?'over':p>=80?'mid':'low';const tb=$('#rk-v');
+ sortTable(tb,V.vend,(rows)=>{const b=tb.querySelector('tbody');b.innerHTML='';
+   rows.forEach((v,i)=>{const lab=v.ferias?'<span class="pctlab fer">férias</span>':`<span class="pctlab ${pc(v.pct)}">${pctr(v.pct)}</span>`;
+     const others=(V.prod_cols||[]).filter(c=>c!=='Tablet');
+     const tCell=(V.prod_cols||[]).includes('Tablet')?`<td class="prodcol">${(v.prod&&v.prod['Tablet'])?brl0(v.prod['Tablet']):'<span class="z">—</span>'}</td>`:'';
+     const lCell=`<td class="liccol">${v.lic?nf(v.lic):'<span class="z">—</span>'}</td>`;
+     const oCells=others.map(c=>`<td class="prodcol">${(v.prod&&v.prod[c])?brl0(v.prod[c]):'<span class="z">—</span>'}</td>`).join('');
+     b.appendChild(el('tr',null,`<td class="pos">${v.ferias?'–':i+1}</td><td class="nome">${nomeSr(v)}</td><td>${brl0(v.meta)}</td><td class="val-money">${brl(v.mrr)}</td><td>${lab}</td>${tCell}${lCell}${oCells}<td>${v.n}</td><td class="hide-sm">${v.reun}</td>`));});
+   const others=(V.prod_cols||[]).filter(c=>c!=='Tablet');
+   const tTot=(V.prod_cols||[]).includes('Tablet')?`<td class="prodcol">${brl0(V.vend.reduce((a,v)=>a+((v.prod&&v.prod['Tablet'])||0),0))}</td>`:'';
+   const lTot=`<td class="liccol">${nf(VT.lic)}</td>`;
+   const oTot=others.map(c=>`<td class="prodcol">${brl0(V.vend.reduce((a,v)=>a+((v.prod&&v.prod[c])||0),0))}</td>`).join('');
+   tb.querySelector('tfoot').innerHTML=`<tr><td></td><td>Time</td><td>${brl0(V.meta_total)}</td><td class="val-money">${brl(VT.mrr)}</td><td style="text-align:right"><span class="pctlab low">${Math.round(pct)}%</span></td>${tTot}${lTot}${oTot}<td>${VT.n}</td><td class="hide-sm">${VT.reun}</td></tr>`;},'mrr');
+ // semanal
+ (function(){const b=$('#sm-v tbody');const nS=V.semlabels.length;const tr=Array(nS).fill(0),tmeta=Array(nS).fill(0);
+   V.vend.forEach(v=>{const cells=v.sem.map((rz,i)=>{const m=Math.round(v.meta*V.wts[i]);tr[i]+=rz;tmeta[i]+=m;
+       const fer=v.fsem&&v.fsem[i];
+       if(fer) return `<td class="wk fer" title="Vendedor de férias nesta semana"><b>férias</b>${rz>0?'<span>+'+brl0(rz).replace('R$ ','')+'</span>':''}</td>`;
+       return `<td class="wk ${rz>=m?'hit':'miss'}"><b>${brl0(rz).replace('R$ ','')}</b><span>/${brl0(m).replace('R$ ','')}</span></td>`;}).join('');
+     const tot=v.sem.reduce((a,b)=>a+b,0);const anyf=v.fsem&&v.fsem.some(x=>x);
+     b.appendChild(el('tr',null,`<td>${nomeSr(v)}${anyf?' <span class="ftag">férias</span>':''}</td>`+cells+`<td class="wk ${tot>=v.meta?'hit':'miss'}"><b>${brl0(tot).replace('R$ ','')}</b><span>/${brl0(v.meta).replace('R$ ','')}</span></td>`));});
+   const tM=tr.reduce((a,b)=>a+b,0);
+   $('#sm-v tfoot').innerHTML=`<tr><td>Time</td>`+tr.map((v,i)=>`<td class="wk ${v>=tmeta[i]?'hit':'miss'}"><b>${brl0(v).replace('R$ ','')}</b><span>/${brl0(tmeta[i]).replace('R$ ','')}</span></td>`).join('')+`<td class="wk ${tM>=V.meta_total?'hit':'miss'}"><b>${brl0(tM).replace('R$ ','')}</b><span>/${brl0(V.meta_total).replace('R$ ','')}</span></td></tr>`;})();
+ // oportunidades
+ (function(){const tb=$('#rk-o');const oT={rec:0,g:0};V.oppv.forEach(o=>{o.win=o.rec?o.ganhas/o.rec*100:0;oT.rec+=o.rec;oT.g+=o.ganhas;});const pcw=w=>w>=30?'over':w>=18?'mid':'low';
+   sortTable(tb,V.oppv,(rows)=>{const b=tb.querySelector('tbody');b.innerHTML='';
+     rows.forEach((o,i)=>b.appendChild(el('tr',null,`<td class="pos">${o.ferias?'–':i+1}</td><td class="nome">${nomeSr(o)}</td><td>${o.rec}</td><td>${o.ganhas}</td><td>${o.ferias?'<span class="pctlab fer">férias</span>':'<span class="pctlab '+pcw(o.win)+'">'+pctr(o.win)+'</span>'}</td>`)));
+     tb.querySelector('tfoot').innerHTML=`<tr><td></td><td>Time</td><td>${oT.rec}</td><td>${oT.g}</td><td style="text-align:right"><span class="pctlab mid">${pctr(oT.g/oT.rec*100)}</span></td></tr>`;},'win');})();
+ // funil por vendedor
+ (function(){const sel=$('#fsel');const names=Object.keys(V.funnel);sel.innerHTML=names.map(n=>'<option>'+n+'</option>').join('');
+   function draw(nm){const rows=V.funnel[nm]||[];const b=$('#fun-v tbody');b.innerHTML='';let tn=0,tv=0;
+     rows.forEach(r=>{tn+=r[1];tv+=r[2];b.appendChild(el('tr',null,`<td style="text-align:left">${r[0]}</td><td>${r[1]}</td><td class="val-money">${brl(r[2])}</td>`));});
+     $('#fun-v tfoot').innerHTML=`<tr><td>Total</td><td>${tn}</td><td class="val-money">${brl(tv)}</td></tr>`;}
+   sel.addEventListener('change',()=>draw(sel.value));if(names.length)draw(names[0]);})();
+ // highlights
+ const ativos=V.vend.filter(v=>!v.ferias);
+ const topPct=[...ativos].sort((a,b)=>b.pct-a.pct)[0];
+ const maxN=[...ativos].sort((a,b)=>b.n-a.n)[0];const maxR=[...ativos].sort((a,b)=>b.reun-a.reun)[0];
+ const novos=Object.entries(V.novos||{}).sort((a,b)=>b[1]-a[1])[0];
+ const win=[...V.oppv].filter(o=>!o.ferias&&o.rec>=5).sort((a,b)=>(b.ganhas/b.rec)-(a.ganhas/a.rec))[0];
+ let jump={nome:'',v:-1e9};ativos.forEach(v=>{const n=v.sem.length;for(let i=1;i<n;i++){const j=v.sem[i]-v.sem[i-1];if(j>jump.v)jump={nome:v.first,v:j};}});
+ $('#hl-v').innerHTML=[
+   ['🏆 Destaque do mês',topPct.first+' · '+pctr(topPct.pct),'maior atingimento da meta'],
+   ['Mais clientes novos',novos?novos[0].split(' ')[0]+' · '+novos[1]:'—','novos logos no mês'],
+   ['Melhor conversão',win?win.nome.split(' ')[0]+' · '+pctr(win.ganhas/win.rec*100):'—','win rate das oportunidades'],
+   ['Mais fechamentos',maxN.first+' · '+maxN.n,'negócios fechados'],
+   ['Mais reuniões',maxR.first+' · '+maxR.reun,'reuniões realizadas'],
+   ['Maior alta semana→semana',jump.nome,'+'+brl0(jump.v)+' de uma semana pra outra'],
+ ].map(h=>`<div class="hlc"><div class="t">${h[0]}</div><div class="big">${h[1]}</div><div class="s">${h[2]}</div></div>`).join('');
+ // maior venda semana
+ $('#wbig').innerHTML=V.maiorsem.map(m=>{const x=m.x||{};return `<div class="wb"><div class="wkn">${m.w}</div><div class="cli">${x.cliente||'—'}</div><div class="cid">${x.cidade||''}</div><div class="vv">${x.valor?brl(x.valor):'—'}</div><div class="vd">${x.vendedor||''}</div></div>`;}).join('');
+ // charts
+ const vl=ativos.map(v=>v.first);
+ new Chart($('#c-vmeta'),{type:'bar',data:{labels:vl,datasets:[{label:'Meta',data:ativos.map(v=>v.meta),backgroundColor:'#e7e9f2',borderRadius:6,barPercentage:.9,categoryPercentage:.62},{label:'MRR',data:ativos.map(v=>v.mrr),backgroundColor:ativos.map(v=>v.pct>=100?'#ff9700':'#1d84ff'),borderRadius:6,barPercentage:.9,categoryPercentage:.62}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+brl(c.parsed.y)}}},scales:{y:{beginAtZero:true,grid:{color:'#eef0f7'},ticks:{callback:v=>'R$ '+(v/1000)+'k'}},x:{grid:{display:false}}}}});
+ new Chart($('#c-vprod'),{type:'doughnut',data:{labels:V.prodv.map(p=>p[0]),datasets:[{data:V.prodv.map(p=>p[1]),backgroundColor:['#2b00ff','#ff9700','#1d84ff','#8aa0d8','#12b76a','#d5d9e8'],borderWidth:2,borderColor:'#fff'}]},options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',font:{size:11}}},tooltip:{callbacks:{label:c=>c.label+': '+brl(c.parsed)}}}}});
+}
+
+// ===================== R&F (lazy) =====================
+let rfBuilt=false;
+function buildRF(){const P=$('#p-rf');const R=DATA.rf;if(!R){P.innerHTML='<p class="hint" style="margin-top:24px">Sem dados de R&F.</p>';return;}
+ const tot=R.membros.reduce((a,r)=>({reun:a.reun+r.reun,ch:a.ch+r.chamadas,mrr:a.mrr+r.mrr}),{reun:0,ch:0,mrr:0});
+ P.innerHTML=`
+  <section><div class="sec-title">Redes & Franquias <span class="sec-note">· atividade e pipeline de marcas</span></div>
+   <div class="kpis">
+    <div class="kpi"><div class="k">Reuniões (mês)</div><div class="v num">${tot.reun}</div><div class="note">com marcas/redes</div></div>
+    <div class="kpi"><div class="k">Marcas distintas</div><div class="v num">${R.marcas}</div><div class="note">no pipeline</div></div>
+    <div class="kpi"><div class="k">Chamadas (mês)</div><div class="v num">${tot.ch}</div><div class="note">total do time</div></div>
+    <div class="kpi"><div class="k">MRR gerado</div><div class="v num">${brl0(tot.mrr)}</div><div class="note">negócios fechados no mês</div></div>
+   </div></section>
+  <section><div class="sec-title">Atividade por integrante</div>
+   <div class="card"><table id="rf-t"><thead><tr><th>Integrante</th><th>Reuniões</th><th>Chamadas</th><th>MRR gerado</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></section>
+  <section><div class="sec-title">Funil de marcas · Redes <span class="sec-note">· clique numa barra pra ver as marcas da etapa</span></div>
+   <div class="chartbox"><h3>Entradas de marcas por etapa</h3><p>${R.marcas} marcas no pipeline de Redes</p><div class="cvs" style="height:340px"><canvas id="c-marcas"></canvas></div></div>
+   <div class="marcas-box" id="mbox"><span class="hint">Clique numa barra do gráfico pra listar as marcas daquela etapa.</span></div></section>`;
+ const b=$('#rf-t tbody');R.membros.forEach(r=>b.appendChild(el('tr',null,`<td class="nome">${r.nome}</td><td>${r.reun}</td><td>${r.chamadas}</td><td class="val-money">${brl0(r.mrr)}</td>`)));
+ $('#rf-t tfoot').innerHTML=`<tr><td>Total</td><td>${tot.reun}</td><td>${tot.ch}</td><td class="val-money">${brl0(tot.mrr)}</td></tr>`;
+ const labels=R.etapas.map(e=>e[0]);
+ new Chart($('#c-marcas'),{type:'bar',
+   data:{labels:labels,datasets:[{data:R.etapas.map(e=>e[1]),backgroundColor:'#2b00ff',hoverBackgroundColor:'#ff9700',borderRadius:5}]},
+   options:{indexAxis:'y',maintainAspectRatio:false,
+     plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+' marcas · clique pra ver'}}},
+     scales:{x:{beginAtZero:true,grid:{color:'#eef0f7'},ticks:{precision:0}},y:{grid:{display:false}}},
+     onClick:function(e,els){if(!els.length)return;var et=labels[els[0].index];var ms=R.marcas_por_etapa[et]||[];
+       $('#mbox').innerHTML='<h4>'+et+' · '+ms.length+' marca(s)</h4><div class="chips">'+ms.map(function(m){return '<span class="mchip">'+m+'</span>';}).join('')+'</div>';}
+   }
+ });
+}
+// tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');document.getElementById('p-'+t.dataset.p).classList.add('on');
+  if(t.dataset.p==='vendas'&&!vBuilt){buildV();vBuilt=true;}
+  if(t.dataset.p==='rf'&&!rfBuilt){buildRF();rfBuilt=true;}
+}));
+</script>
+</body></html>
